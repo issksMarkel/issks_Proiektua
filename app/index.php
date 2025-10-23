@@ -3,15 +3,16 @@ error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
 // Conexión a BD al inicio para estar disponible en todas las rutas
-$hostname = "db";
+$hostname = "localhost";
 $username = "admin";
 $password = "test";
-$db = "database";
+$db = "db";
 
 $conn = mysqli_connect($hostname, $username, $password, $db);
 if ($conn->connect_error) {
     // En producción, mostrar mensaje genérico
     die("Error de conexión a la base de datos");
+}
 
 // Función para validar NAN en el servidor
 function validarNAN($nan) {
