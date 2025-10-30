@@ -28,6 +28,12 @@ CREATE TABLE `elementuak` (
     `defentsa` INT NOT NULL
 );
 
+INSERT INTO `elementuak` (`izena`, `mota`, `bizitza`, `erasoa`, `defentsa`) VALUES 
+('Pikachu', 'Elektrikoa', 35, 55, 40),
+('Charmander', 'Sua', 39, 52, 43),
+('Squirtle', 'Ura', 44, 48, 65),
+('Bulbasaur', 'Belarra', 45, 49, 49);
+
 DROP TABLE IF EXISTS `usuario_elementuak`;
 
 CREATE TABLE `usuario_elementuak` (
