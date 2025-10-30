@@ -2,7 +2,6 @@
 session_start();
 require_once 'config.php';
 
-// Si ya está logueado, redirigir a elements
 if (isset($_SESSION['user_id'])) {
     header('Location: elements.php');
     exit;
@@ -11,10 +10,9 @@ if (isset($_SESSION['user_id'])) {
 $conn = getConnection();
 $login_error = '';
 
-// Procesar login
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login'])) {
     $email = mysqli_real_escape_string($conn, $_POST['email']);
-    $result = mysqli_query($conn, "SELECT * FROM usuarios WHERE email = '$email'");
+    $result = mysqli_query($conn, "SELECT * FROM erabiltzaile WHERE email = '$email'");
     
     if ($user = mysqli_fetch_assoc($result)) {
         if (password_verify($_POST['password'], $user['password'])) {

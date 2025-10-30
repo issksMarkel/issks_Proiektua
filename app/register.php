@@ -2,7 +2,6 @@
 session_start();
 require_once 'config.php';
 
-// Si ya está logueado, redirigir a elements
 if (isset($_SESSION['user_id'])) {
     header('Location: elements.php');
     exit;
@@ -11,7 +10,6 @@ if (isset($_SESSION['user_id'])) {
 $conn = getConnection();
 $register_error = '';
 
-// Procesar registro
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['register'])) {
     $nan = mysqli_real_escape_string($conn, $_POST['nan']);
     
@@ -22,7 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['register'])) {
             $register_error = "NAN hau dagoeneko erregistratuta dago";
         } else {
             $query = sprintf(
-                "INSERT INTO erabil (nombre, nan, telefono, fecha_nacimiento, email, password) VALUES ('%s', '%s', '%s', '%s', '%s', '%s')",
+                "INSERT INTO erabiltzaile (nombre, nan, telefono, fecha_nacimiento, email, password) VALUES ('%s', '%s', '%s', '%s', '%s', '%s')",
                 mysqli_real_escape_string($conn, $_POST['izena']),
                 $nan,
                 mysqli_real_escape_string($conn, $_POST['telefonoa']),

@@ -2,13 +2,11 @@
 session_start();
 require_once 'config.php';
 
-// Verify if user is logged in
 if (!isset($_SESSION['user_id'])) {
     header('Location: login.php');
     exit;
 }
 
-// Handle Pokemon deletion
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['delete_pokemon'])) {
     $pokemon_name = $_POST['pokemon_name'];
     $stmt = $conn->prepare("DELETE FROM erabiltzaile_pokemon WHERE usuario_id = ? AND elementu_izena = ?");
@@ -17,13 +15,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['delete_pokemon'])) {
     exit();
 }
 
-// Get current user data
 $user_id = $_SESSION['user_id'];
 $stmt = $conn->prepare("SELECT * FROM erabiltzaile WHERE id = ?");
 $stmt->execute([$user_id]);
 $user = $stmt->fetch();
 
-// Get user's Pokemon
 $stmt = $conn->prepare("
     SELECT p.* 
     FROM pokemon p 
@@ -33,14 +29,12 @@ $stmt = $conn->prepare("
 $stmt->execute([$_SESSION['user_id']]);
 $pokemons = $stmt->fetchAll();
 
-// Process profile update
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_profile'])) {
     $izena = $_POST['izena'];
     $telefono = $_POST['telefono'];
     $jaiotze_data = $_POST['jaiotze_data'];
     $email = $_POST['email'];
     
-    // Check if email exists (except current user)
     $stmt = $conn->prepare("SELECT id FROM erabiltzaile WHERE email = ? AND id != ?");
     $stmt->execute([$email, $user_id]);
     if ($stmt->rowCount() > 0) {
@@ -56,7 +50,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_profile'])) {
         if ($stmt->execute([$izena, $telefono, $jaiotze_data, $email, $user_id])) {
             $_SESSION['email'] = $email;
             $success_message = "Datuak eguneratu dira!";
-            // Reload updated data
             $stmt = $conn->prepare("SELECT * FROM erabiltzaile WHERE id = ?");
             $stmt->execute([$user_id]);
             $user = $stmt->fetch();
@@ -66,7 +59,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_profile'])) {
     }
 }
 
-// Process password change
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['change_password'])) {
     $current_password = $_POST['current_password'];
     $new_password = $_POST['new_password'];
@@ -83,7 +75,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['change_password'])) {
                     $error_message = "Errorea pasahitza aldatzean";
                 }
             } else {
-                $error_message = "Pasahitzak gutxienez 6 karaktere izan behar ditu";
+                $error_message = "Pasahitzak gutxienez 8 karaktere izan behar ditu";
             }
         } else {
             $error_message = "Pasahitz berriak ez datoz bat";

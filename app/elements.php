@@ -7,11 +7,9 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
-// Get all pokemon
 $stmt = $conn->query("SELECT * FROM pokemon");
 $pokemons = $stmt->fetchAll();
 
-// Get user's pokemon
 $stmt = $conn->prepare("
     SELECT p.* 
     FROM pokemon p
@@ -22,7 +20,6 @@ $stmt = $conn->prepare("
 $stmt->execute([$_SESSION['user_id']]);
 $user_pokemons = $stmt->fetchAll();
 
-// Get all available pokemon
 $stmt = $conn->query("SELECT izena, mota FROM pokemon ORDER BY izena");
 $all_pokemons = $stmt->fetchAll();
 
