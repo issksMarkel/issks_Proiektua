@@ -5,6 +5,8 @@ Ibai Gonzalez Tejedor
 Markel Valle Vivanco
 
 ## Martxan jartzeko instrukzioak
+Inportatu SQL datu-basearen edukiontzira:
+		'docker-compose exec -T db mysql -u admin -ptest database < database.sql'
 Lehenik eta behin repositorioa behin klonatuta:
 	1.
 		'$ docker-compose build'
