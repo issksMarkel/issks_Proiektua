@@ -17,6 +17,7 @@ function validarNAN($nan) {
     $letras = 'TRWAGMYFPDXBNJZSQVHLCKE';
     return $letras[intval(substr($nan, 0, 8)) % 23] === substr($nan, 9, 1);
 }
+<<<<<<< HEAD
 
 $db_host = 'localhost';
 $db_user = 'root';
@@ -34,3 +35,6 @@ try {
     die("Errorea konexioan: " . $e->getMessage());
 }
 ?>
+=======
+?>
+>>>>>>> bbd0d26b0a922afa64144c98ab2631935f560bd9

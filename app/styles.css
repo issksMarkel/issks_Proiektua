@@ -172,6 +172,7 @@ input, select {
 .profile-section p {
     margin: 10px 0;
     color: #555;
+<<<<<<< HEAD
 }
 
 .delete-btn {
@@ -203,3 +204,6 @@ input, select {
     justify-content: center;
     gap: 20px;
 }
+=======
+}
+>>>>>>> bbd0d26b0a922afa64144c98ab2631935f560bd9
