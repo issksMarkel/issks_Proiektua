@@ -1,19 +1,32 @@
 
-# Docker LAMP
-Linux + Apache + MariaDB (MySQL) + PHP 7.2 on Docker Compose. Mod_rewrite enabled by default.
+# Taldekide izenak
+Iker Diez Henales
+Ibai Gonzalez Tejedor
+Markel Valle Vivanco
 
-## Instructions
+## Martxan jartzeko instrukzioak
+Lehenik eta behin repositorioa behin klonatuta:
+	1.
+		'$ docker-compose build'
+	2.
+		'$ docker-compose up -d'
 
-Enter the following command to start your containers:
-```bash
-$ docker-compose up -d
-```
+Bi komando horiekin sistema martxan jarri da, orain web orria eta datu basea ikusteko:
+	3. Nabigatzailean sartu eta:
 
-To stop them, use this:
-```bash
-$ docker-compose stop
-```
+		'http://localhost:81'
 
-Feel free to make pull requests and help to improve this.
+##Web orria zabaldu da
+	4. Nabigatzailean sartu:
 
-If you are looking for phpMyAdmin, take a look at [this](https://github.com/celsocelante/docker-lamp/issues/2).
+		'http://localhost:8890'
+##Datu-basea zabaldu da
+
+##Sistema amatatzeko:
+
+		'$ docker-compose down'
+
+
+###Datu-basea ez bada guztiz zabaltzen hurrengoa idatzi:
+
+		'$docker volume rm issks_proiektua_db_data'
