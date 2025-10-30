@@ -17,20 +17,4 @@ function validarNAN($nan) {
     $letras = 'TRWAGMYFPDXBNJZSQVHLCKE';
     return $letras[intval(substr($nan, 0, 8)) % 23] === substr($nan, 9, 1);
 }
-
-$db_host = 'localhost';
-$db_user = 'root';
-$db_pass = '';
-$db_name = 'database';
-
-try {
-    $conn = new PDO(
-        "mysql:host=$db_host;dbname=$db_name;charset=utf8mb4",
-        $db_user,
-        $db_pass,
-        array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION)
-    );
-} catch(PDOException $e) {
-    die("Errorea konexioan: " . $e->getMessage());
-}
 ?>
