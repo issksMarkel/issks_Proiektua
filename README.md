@@ -15,9 +15,9 @@ Lehenik eta behin repositorioa behin klonatuta:
 	
 		'$ docker-compose build'
 
-	3.
+3.
 	
-		'$ docker-compose up -d'
+		'$docker-compose up -d'
 
 Bi komando horiekin sistema martxan jarri da, orain web orria eta datu basea ikusteko:
 	4. Nabigatzailean sartu eta:
