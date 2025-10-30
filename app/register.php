@@ -14,7 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['register'])) {
     $nan = mysqli_real_escape_string($conn, $_POST['nan']);
     
     if (validarNAN($nan)) {
-        $check = mysqli_query($conn, "SELECT id FROM usuarios WHERE nan = '$nan'");
+        $check = mysqli_query($conn, "SELECT id FROM erabiltzaile WHERE nan = '$nan'");
         
         if (mysqli_num_rows($check) > 0) {
             $register_error = "NAN hau dagoeneko erregistratuta dago";
