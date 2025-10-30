@@ -172,38 +172,4 @@ input, select {
 .profile-section p {
     margin: 10px 0;
     color: #555;
-<<<<<<< HEAD
 }
-
-.delete-btn {
-    background-color: #ff4444;
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    border-radius: 3px;
-    cursor: pointer;
-    margin-top: 10px;
-}
-
-.delete-btn:hover {
-    background-color: #cc0000;
-}
-
-.pokemon-card {
-    border: 1px solid #ccc;
-    padding: 15px;
-    margin: 10px;
-    border-radius: 5px;
-    display: inline-block;
-    width: 200px;
-}
-
-.pokemon-list {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 20px;
-}
-=======
-}
->>>>>>> bbd0d26b0a922afa64144c98ab2631935f560bd9

@@ -7,7 +7,7 @@ define('DB_NAME', 'database');
 function getConnection() {
     $conn = mysqli_connect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
     if ($conn->connect_error) {
-        die("Datu basearekin konexioan errorea egon da!!!");
+        die("Error de conexión a la base de datos");
     }
     return $conn;
 }

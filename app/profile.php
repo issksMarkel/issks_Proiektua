@@ -2,64 +2,28 @@
 session_start();
 require_once 'config.php';
 
-<<<<<<< HEAD
-=======
-// Verificar si está logueado
->>>>>>> bbd0d26b0a922afa64144c98ab2631935f560bd9
 if (!isset($_SESSION['user_id'])) {
     header('Location: login.php');
     exit;
 }
 
-<<<<<<< HEAD
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['delete_pokemon'])) {
-    $pokemon_name = $_POST['pokemon_name'];
-    $stmt = $conn->prepare("DELETE FROM erabiltzaile_pokemon WHERE usuario_id = ? AND elementu_izena = ?");
-    $stmt->execute([$_SESSION['user_id'], $pokemon_name]);
-    header("Location: profile.php");
-    exit();
-}
-
-=======
 $conn = getConnection();
 $success_message = '';
 $error_message = '';
 
-// Obtener datos actuales del usuario
->>>>>>> bbd0d26b0a922afa64144c98ab2631935f560bd9
 $user_id = $_SESSION['user_id'];
 $query = "SELECT * FROM usuarios WHERE id = $user_id";
 $result = mysqli_query($conn, $query);
 $user = mysqli_fetch_assoc($result);
 
-<<<<<<< HEAD
-$stmt = $conn->prepare("
-    SELECT p.* 
-    FROM pokemon p 
-    INNER JOIN erabiltzaile_pokemon ep ON p.izena = ep.elementu_izena 
-    WHERE ep.usuario_id = ?
-");
-$stmt->execute([$_SESSION['user_id']]);
-$pokemons = $stmt->fetchAll();
-
-=======
-// Procesar actualización de datos
->>>>>>> bbd0d26b0a922afa64144c98ab2631935f560bd9
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_profile'])) {
     $nombre = mysqli_real_escape_string($conn, $_POST['nombre']);
     $telefono = mysqli_real_escape_string($conn, $_POST['telefono']);
     $fecha_nacimiento = mysqli_real_escape_string($conn, $_POST['fecha_nacimiento']);
     $email = mysqli_real_escape_string($conn, $_POST['email']);
     
-<<<<<<< HEAD
-    $stmt = $conn->prepare("SELECT id FROM erabiltzaile WHERE email = ? AND id != ?");
-    $stmt->execute([$email, $user_id]);
-    if ($stmt->rowCount() > 0) {
-=======
-    // Verificar si el email ya existe (excepto el del usuario actual)
     $check_email = mysqli_query($conn, "SELECT id FROM usuarios WHERE email = '$email' AND id != $user_id");
     if (mysqli_num_rows($check_email) > 0) {
->>>>>>> bbd0d26b0a922afa64144c98ab2631935f560bd9
         $error_message = "Email hau beste erabiltzaile batek erabiltzen du";
     } else {
         $update_query = "UPDATE usuarios SET 
@@ -72,25 +36,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_profile'])) {
         if (mysqli_query($conn, $update_query)) {
             $_SESSION['email'] = $email;
             $success_message = "Datuak eguneratu dira!";
-<<<<<<< HEAD
-            $stmt = $conn->prepare("SELECT * FROM erabiltzaile WHERE id = ?");
-            $stmt->execute([$user_id]);
-            $user = $stmt->fetch();
-=======
-            // Recargar datos actualizados
             $result = mysqli_query($conn, $query);
             $user = mysqli_fetch_assoc($result);
->>>>>>> bbd0d26b0a922afa64144c98ab2631935f560bd9
         } else {
             $error_message = "Errorea datuak eguneratzean";
         }
     }
 }
 
-<<<<<<< HEAD
-=======
-// Procesar cambio de contraseña
->>>>>>> bbd0d26b0a922afa64144c98ab2631935f560bd9
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['change_password'])) {
     $current_password = $_POST['current_password'];
     $new_password = $_POST['new_password'];
@@ -98,7 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['change_password'])) {
     
     if (password_verify($current_password, $user['password'])) {
         if ($new_password === $confirm_password) {
-            if (strlen($new_password) >= 8) {
+            if (strlen($new_password) >= 6) {
                 $hashed_password = password_hash($new_password, PASSWORD_DEFAULT);
                 $update_pass = "UPDATE usuarios SET password = '$hashed_password' WHERE id = $user_id";
                 
@@ -108,7 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['change_password'])) {
                     $error_message = "Errorea pasahitza aldatzean";
                 }
             } else {
-                $error_message = "Pasahitzak gutxienez 8 karaktere izan behar ditu";
+                $error_message = "Pasahitzak gutxienez 6 karaktere izan behar ditu";
             }
         } else {
             $error_message = "Pasahitz berriak ez datoz bat";
@@ -146,7 +99,6 @@ $conn->close();
             <div class="error"><?= $error_message ?></div>
         <?php endif; ?>
 
-        <!-- Formulario de datos personales -->
         <div class="profile-section">
             <h2>Datu Pertsonalak</h2>
             <form method="POST" onsubmit="return validarDatosPersonales()">
@@ -180,7 +132,6 @@ $conn->close();
             </form>
         </div>
 
-        <!-- Formulario de cambio de contraseña -->
         <div class="profile-section">
             <h2>Pasahitza Aldatu</h2>
             <form method="POST" onsubmit="return validarPassword()">
@@ -191,19 +142,18 @@ $conn->close();
 
                 <div class="form-group">
                     <label for="new_password">Pasahitz berria:</label>
-                    <input type="password" id="new_password" name="new_password" required minlength="8">
+                    <input type="password" id="new_password" name="new_password" required minlength="6">
                 </div>
 
                 <div class="form-group">
                     <label for="confirm_password">Berretsi pasahitza:</label>
-                    <input type="password" id="confirm_password" name="confirm_password" required minlength="8">
+                    <input type="password" id="confirm_password" name="confirm_password" required minlength="6">
                 </div>
 
                 <button type="submit" name="change_password" class="btn">Pasahitza Aldatu</button>
             </form>
         </div>
 
-        <!-- Información de cuenta -->
         <div class="profile-section">
             <h2>Kontu Informazioa</h2>
             <p><strong>Erregistro data:</strong> <?= date('Y-m-d H:i', strtotime($user['fecha_registro'])) ?></p>
@@ -230,8 +180,8 @@ $conn->close();
             const newPass = document.getElementById('new_password').value;
             const confirmPass = document.getElementById('confirm_password').value;
             
-            if (newPass.length < 8) {
-                alert('Pasahitzak gutxienez 8 karaktere izan behar ditu');
+            if (newPass.length < 6) {
+                alert('Pasahitzak gutxienez 6 karaktere izan behar ditu');
                 return false;
             }
             if (newPass !== confirmPass) {

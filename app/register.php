@@ -10,25 +10,24 @@ if (isset($_SESSION['user_id'])) {
 $conn = getConnection();
 $register_error = '';
 
+// Procesar registro
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['register'])) {
     $nan = mysqli_real_escape_string($conn, $_POST['nan']);
     
     if (validarNAN($nan)) {
-        $check = mysqli_query($conn, "SELECT id FROM erabiltzaile WHERE nan = '$nan'");
+        $check = mysqli_query($conn, "SELECT id FROM usuarios WHERE nan = '$nan'");
         
         if (mysqli_num_rows($check) > 0) {
             $register_error = "NAN hau dagoeneko erregistratuta dago";
-        } elseif (strlen($_POST['password']) < 8) {
-            $register_error = "Pasahitzak gutxienez 8 karaktere izan behar ditu";
         } else {
             $query = sprintf(
-                "INSERT INTO erabiltzaile (izena, nan, telefono, fecha_nacimiento, email, pasahitza) VALUES ('%s', '%s', '%s', '%s', '%s', '%s')",
+                "INSERT INTO usuarios (nombre, nan, telefono, fecha_nacimiento, email, password) VALUES ('%s', '%s', '%s', '%s', '%s', '%s')",
                 mysqli_real_escape_string($conn, $_POST['izena']),
                 $nan,
                 mysqli_real_escape_string($conn, $_POST['telefonoa']),
                 mysqli_real_escape_string($conn, $_POST['jaiotze_data']),
                 mysqli_real_escape_string($conn, $_POST['email']),
-                password_hash($_POST['pasahitza'], PASSWORD_DEFAULT)
+                password_hash($_POST['password'], PASSWORD_DEFAULT)
             );
             
             if (mysqli_query($conn, $query)) {
@@ -87,7 +86,7 @@ $conn->close();
             </div>
             <div class="form-group">
                 <label>Pasahitza:</label>
-                <input type="password" id="password" name="password" required minlength="8">
+                <input type="password" name="password" required>
             </div>
             <button type="submit" name="register" class="btn">Erregistratu</button>
             <p>Jadanik kontua duzu? <a href="login.php">Saioa Hasi</a></p>
@@ -99,7 +98,6 @@ $conn->close();
             const nan = document.getElementById('nan').value;
             const tel = document.getElementById('telefonoa').value;
             const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
             
             if (!/^[0-9]{8}-[A-Z]$/.test(nan)) {
                 alert('NAN formatu okerra (Adibidez: 12345678-Z)');
@@ -111,10 +109,6 @@ $conn->close();
             }
             if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
                 alert('Email formatu okerra');
-                return false;
-            }
-            if (password.length < 8) {
-                alert('Pasahitzak gutxienez 8 karaktere izan behar ditu');
                 return false;
             }
             return true;
