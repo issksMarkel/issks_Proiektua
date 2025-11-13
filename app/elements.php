@@ -25,8 +25,23 @@ $all_pokemons = $stmt->fetchAll();
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (isset($_POST['add_pokemon'])) {
-        $stmt = $conn->prepare("INSERT INTO erabiltzaile_pokemon (usuario_id, elementu_izena) VALUES (?, ?)");
+        try {
+            $stmt = $conn->prepare("INSERT INTO erabiltzaile_pokemon (usuario_id, elementu_izena) VALUES (?, ?)");
+            $stmt->execute([$_SESSION['user_id'], $_POST['pokemon_izena']]);
+            $_SESSION['success'] = "Pokemona gehitu da!";
+        } catch (PDOException $e) {
+            if ($e->getCode() == 23000) {
+                $_SESSION['error'] = "Pokemon hau dagoeneko zerrenda";
+            } else {
+                $_SESSION['error'] = "Errorea pokemona gehitzean";
+            }
+        }
+        header("Location: elements.php");
+        exit();
+    } elseif (isset($_POST['remove_pokemon'])) {
+        $stmt = $conn->prepare("DELETE FROM erabiltzaile_pokemon WHERE usuario_id = ? AND elementu_izena = ?");
         $stmt->execute([$_SESSION['user_id'], $_POST['pokemon_izena']]);
+        $_SESSION['success'] = "Pokemona kendu da!";
         header("Location: elements.php");
         exit();
     } elseif (isset($_POST['update_pokemon'])) {
@@ -41,6 +56,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $_POST['defentsa'],
             $_POST['izena_original']
         ]);
+        $_SESSION['success'] = "Pokemona eguneratu da!";
         header("Location: elements.php");
         exit();
     }
@@ -65,6 +81,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         <?php if (isset($_SESSION['success'])): ?>
             <div class="success"><?= htmlspecialchars($_SESSION['success']); unset($_SESSION['success']); ?></div>
+        <?php endif; ?>
+
+        <?php if (isset($_SESSION['error'])): ?>
+            <div class="error"><?= htmlspecialchars($_SESSION['error']); unset($_SESSION['error']); ?></div>
         <?php endif; ?>
 
         <h1>Nire Pokemonak</h1>
@@ -97,11 +117,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <p><strong>Bizitza:</strong> <?= htmlspecialchars($pokemon['bizitza']) ?></p>
                         <p><strong>Erasoa:</strong> <?= htmlspecialchars($pokemon['erasoa']) ?></p>
                         <p><strong>Defentsa:</strong> <?= htmlspecialchars($pokemon['defentsa']) ?></p>
-                        <button class="btn btn-edit" onclick='editPokemon(<?= json_encode($pokemon) ?>)'>✏️ Editatu</button>
-                        <form method="POST" style="display: inline;">
-                            <input type="hidden" name="pokemon_izena" value="<?= htmlspecialchars($pokemon['izena']) ?>">
-                            <button type="submit" name="remove_pokemon" class="btn btn-delete">❌ Kendu</button>
-                        </form>
+                        <div class="pokemon-actions">
+                            <button class="btn btn-edit" onclick='editPokemon(<?= json_encode($pokemon) ?>)'>✏️ Editatu</button>
+                            <form method="POST" style="display: inline;" onsubmit="return confirm('Ziur zaude pokemon hau kendu nahi duzula?')">
+                                <input type="hidden" name="pokemon_izena" value="<?= htmlspecialchars($pokemon['izena']) ?>">
+                                <button type="submit" name="remove_pokemon" class="btn btn-delete">🗑️ Kendu</button>
+                            </form>
+                        </div>
                     </div>
                 <?php endforeach; ?>
             <?php else: ?>

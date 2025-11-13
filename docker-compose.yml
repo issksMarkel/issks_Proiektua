@@ -1,40 +1,32 @@
+version: '3.8'
+
 services:
-   web:
-      build: .  
-      environment:
-        - ALLOW_OVERRIDE=true
-      ports:
-        - "81:80"
-      links:
-        - db
-      volumes:
-        - ./app:/var/www/html/
+  web:
+    image: php:8.1-apache
+    container_name: pokemon_web
+    ports:
+      - "81:80"
+    volumes:
+      - ./app:/var/www/html
+    depends_on:
+      - db
+    command: >
+      bash -c "docker-php-ext-install mysqli pdo pdo_mysql
+      && apache2-foreground"
 
-   db:
-     image: mariadb:10.8.2
-     container_name: database
-     restart: always
-     volumes:
-       - db_data:/var/lib/mysql
-       - ./database.sql:/docker-entrypoint-initdb.d/01-init.sql
-     environment:
-       MYSQL_ROOT_PASSWORD: root
-       MYSQL_USER: admin
-       MYSQL_PASSWORD: test
-       MYSQL_DATABASE: database
-     ports:
-       - "3306:3306"
-
-   phpmyadmin:
-     image: phpmyadmin/phpmyadmin:latest
-     links:
-       - db
-     ports:
-       - "8890:80"
-     environment:
-       PMA_HOST: db
-       MYSQL_USER: admin
-       MYSQL_PASSWORD: test
+  db:
+    image: mysql:8.0
+    container_name: pokemon_db
+    environment:
+      MYSQL_ROOT_PASSWORD: test
+      MYSQL_DATABASE: database
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: test
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./database.sql:/docker-entrypoint-initdb.d/database.sql
+      - mysql_data:/var/lib/mysql
 
 volumes:
-  db_data: 
+  mysql_data:
