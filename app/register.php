@@ -14,7 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['register'])) {
     $nan = mysqli_real_escape_string($conn, $_POST['nan']);
     
     if (validarNAN($nan)) {
-        $check = mysqli_query($conn, "SELECT id FROM usuarios WHERE nan = '$nan'");
+        $check = mysqli_query($conn, "SELECT id FROM erabiltzaile WHERE nan = '$nan'");
         
         if (mysqli_num_rows($check) > 0) {
             $register_error = "NAN hau dagoeneko erregistratuta dago";
@@ -22,10 +22,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['register'])) {
             $register_error = "Pasahitzak gutxienez 8 karaktere izan behar ditu";
         } else {
             $query = sprintf(
-                "INSERT INTO erabiltzaile (nombre, nan, telefono, fecha_nacimiento, email, password) VALUES ('%s', '%s', '%s', '%s', '%s', '%s')",
+                "INSERT INTO erabiltzaile (izena, nan, telefono, jaiotze_data, email, pasahitza) VALUES ('%s', '%s', '%s', '%s', '%s', '%s')",
                 mysqli_real_escape_string($conn, $_POST['izena']),
                 $nan,
-                mysqli_real_escape_string($conn, $_POST['telefonoa']),
+                mysqli_real_escape_string($conn, $_POST['telefono']),
                 mysqli_real_escape_string($conn, $_POST['jaiotze_data']),
                 mysqli_real_escape_string($conn, $_POST['email']),
                 password_hash($_POST['password'], PASSWORD_DEFAULT)
@@ -34,11 +34,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['register'])) {
             if (mysqli_query($conn, $query)) {
                 $_SESSION['user_id'] = mysqli_insert_id($conn);
                 $_SESSION['email'] = $_POST['email'];
-                $_SESSION['success'] = "Ongi etorri! Zure kontua sortu da.";
                 header('Location: elements.php');
                 exit;
             } else {
-                $register_error = "Errorea erregistroan";
+                $register_error = "Errorea erregistratzerakoan: " . mysqli_error($conn);
             }
         }
     } else {
@@ -66,28 +65,28 @@ $conn->close();
         
         <form method="POST" onsubmit="return validatuFormularioa()">
             <div class="form-group">
-                <label for="izena">Izen abizenak:</label>
-                <input type="text" id="izena" name="izena" required>
+                <label>Izena:</label>
+                <input type="text" name="izena" id="izena" required>
             </div>
             <div class="form-group">
-                <label for="nan">NAN:</label>
-                <input type="text" id="nan" name="nan" required pattern="[0-9]{8}-[A-Z]" placeholder="12345678-Z">
+                <label>NAN:</label>
+                <input type="text" name="nan" id="nan" placeholder="12345678-A" required>
             </div>
             <div class="form-group">
-                <label for="telefonoa">Telefonoa:</label>
-                <input type="tel" id="telefonoa" name="telefonoa" required pattern="[0-9]{9}" placeholder="612345678">
+                <label>Telefonoa:</label>
+                <input type="tel" name="telefono" id="telefono" placeholder="612345678" required>
             </div>
             <div class="form-group">
-                <label for="jaiotze_data">Jaiotze data:</label>
-                <input type="date" id="jaiotze_data" name="jaiotze_data" required>
+                <label>Jaiotze data:</label>
+                <input type="date" name="jaiotze_data" id="jaiotze_data" required>
             </div>
             <div class="form-group">
-                <label for="email">Email:</label>
-                <input type="email" id="email" name="email" required>
+                <label>Email:</label>
+                <input type="email" name="email" id="email" required>
             </div>
             <div class="form-group">
                 <label>Pasahitza:</label>
-                <input type="password" id="password" name="password" required minlength="8">
+                <input type="password" name="password" id="password" required>
             </div>
             <button type="submit" name="register" class="btn">Erregistratu</button>
             <p>Jadanik kontua duzu? <a href="login.php">Saioa Hasi</a></p>
@@ -97,20 +96,20 @@ $conn->close();
     <script>
         function validatuFormularioa() {
             const nan = document.getElementById('nan').value;
-            const tel = document.getElementById('telefonoa').value;
+            const tel = document.getElementById('telefono').value;
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
             
             if (!/^[0-9]{8}-[A-Z]$/.test(nan)) {
-                alert('NAN formatu okerra (Adibidez: 12345678-Z)');
+                alert('NAN formatua okerra da (12345678-A)');
                 return false;
             }
             if (!/^[0-9]{9}$/.test(tel)) {
-                alert('Telefonoak 9 zenbaki izan behar ditu');
+                alert('Telefono formatua okerra da (9 zenbaki)');
                 return false;
             }
             if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-                alert('Email formatu okerra');
+                alert('Email formatua okerra da');
                 return false;
             }
             if (password.length < 8) {
