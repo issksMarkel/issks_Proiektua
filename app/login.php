@@ -1,6 +1,10 @@
 <?php
+// Iniciar sesión PRIMERO
 session_start();
+
+// Luego incluir configuraciones
 require_once 'config.php';
+require_once 'security_headers.php';
 
 if (isset($_SESSION['user_id'])) {
     header('Location: elements.php');
@@ -8,6 +12,7 @@ if (isset($_SESSION['user_id'])) {
 }
 
 $conn = getConnection();
+// INICIALIZAR la variable
 $login_error = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login'])) {
@@ -44,15 +49,15 @@ $conn->close();
     <div class="container">
         <h1>Saioa Hasi</h1>
         
-        <?php if ($login_error): ?>
-            <div class="error"><?= $login_error ?></div>
+        <?php if (!empty($login_error)): ?>
+            <div class="error"><?= htmlspecialchars($login_error) ?></div>
         <?php endif; ?>
         
         <form method="POST">
             <input type="hidden" name="csrf_token" value="<?= generarTokenCSRF() ?>">
             <div class="form-group">
                 <label>Email:</label>
-                <input type="email" name="email" required>
+                <input type="email" name="email" value="<?= isset($_POST['email']) ? htmlspecialchars($_POST['email']) : '' ?>" required>
             </div>
             <div class="form-group">
                 <label>Pasahitza:</label>

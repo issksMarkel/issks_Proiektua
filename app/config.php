@@ -32,4 +32,6 @@ function validarTokenCSRF($token) {
     }
     return true;
 }
+
+
 ?>

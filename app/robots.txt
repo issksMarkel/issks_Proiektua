@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+
+# Archivos estáticos permitidos para todos los bots
+Allow: /styles.css
+Allow: /scripts.js
+Allow: /validation.js
+
+# No es necesario revelar estructura interna
+# Los bots inteligentes no indexarán archivos PHP por defecto

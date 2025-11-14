@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once 'config.php';
+require_once 'security_headers.php';
 
 if (!isset($_SESSION['user_id'])) {
     header('Location: login.php');
@@ -8,6 +9,7 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 $conn = getConnection();
+// INICIALIZAR variables
 $success_message = '';
 $error_message = '';
 

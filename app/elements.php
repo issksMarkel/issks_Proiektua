@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once 'config.php';
+require_once 'security_headers.php';
 
 if (!isset($_SESSION['user_id'])) {
     header('Location: login.php');
@@ -94,24 +95,32 @@ $all_elements = mysqli_query($conn, "SELECT izena, mota FROM elementuak ORDER BY
 
         <div class="element-list">
             <h2>Nire zerrenda</h2>
-            <?php if (mysqli_num_rows($result) > 0): ?>
-                <?php while ($el = mysqli_fetch_assoc($result)): ?>
-                    <?php $json = htmlspecialchars(json_encode($el), ENT_QUOTES, 'UTF-8'); ?>
-                    <div class="element-card">
-                        <h3><?= htmlspecialchars($el['izena']) ?></h3>
-                        <p><strong>Mota:</strong> <?= htmlspecialchars($el['mota']) ?></p>
-                        <button class="btn btn-edit" onclick='editElement(<?= $json ?>)'>✏️ Editatu</button>
-                    </div>
-                <?php endwhile; ?>
-            <?php else: ?>
-                <p>Ez duzu elementurik oraindik.</p>
-            <?php endif; ?>
+            <div id="elementList">
+                <?php 
+                // Reiniciar el puntero del resultado
+                mysqli_data_seek($result, 0);
+                ?>
+                <?php if (mysqli_num_rows($result) > 0): ?>
+                    <?php while ($el = mysqli_fetch_assoc($result)): ?>
+                        <?php 
+                        $json = htmlspecialchars(json_encode($el), ENT_QUOTES, 'UTF-8');
+                        ?>
+                        <div class="element-card">
+                            <h3><?= htmlspecialchars($el['izena']) ?></h3>
+                            <p><strong>Mota:</strong> <?= htmlspecialchars($el['mota']) ?></p>
+                            <button class="btn btn-edit" data-element='<?= $json ?>'>✏️ Editatu</button>
+                        </div>
+                    <?php endwhile; ?>
+                <?php else: ?>
+                    <p>Ez duzu elementurik oraindik.</p>
+                <?php endif; ?>
+            </div>
         </div>
     </div>
 
     <div id="editModal" class="modal">
         <div class="modal-content">
-            <span class="close" onclick="closeEditModal()">&times;</span>
+            <span class="close" id="closeModal">&times;</span>
             <h2>Elementua Editatu</h2>
             <form method="POST">
                 <input type="hidden" name="csrf_token" value="<?= generarTokenCSRF() ?>">
@@ -138,7 +147,7 @@ $all_elements = mysqli_query($conn, "SELECT izena, mota FROM elementuak ORDER BY
                     <input type="number" name="defentsa" id="modal_defentsa" min="1" required>
                 </div>
                 <button type="submit" name="update_element" class="btn">Gorde</button>
-                <button type="button" class="btn btn-secondary" onclick="closeEditModal()">Utzi</button>
+                <button type="button" class="btn btn-secondary" id="cancelEdit">Utzi</button>
             </form>
         </div>
     </div>
