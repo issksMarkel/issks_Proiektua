@@ -49,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['change_password'])) {
     $new_password = $_POST['new_password'];
     $confirm_password = $_POST['confirm_password'];
     
-<<<<<<< HEAD
+
     if (password_verify($current_password, $user['pasahitza'])) {
         if ($new_password === $confirm_password) {
             if (strlen($new_password) >= 8) {
@@ -57,7 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['change_password'])) {
                 $stmt = $conn->prepare("UPDATE erabiltzaile SET pasahitza = ? WHERE id = ?");
                 
                 if ($stmt->execute([$hashed_password, $user_id])) {
-=======
+
     if (password_verify($current_password, $user['password'])) {
         if ($new_password === $confirm_password) {
             if (strlen($new_password) >= 6) {
@@ -65,7 +65,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['change_password'])) {
                 $update_pass = "UPDATE usuarios SET password = '$hashed_password' WHERE id = $user_id";
                 
                 if (mysqli_query($conn, $update_pass)) {
->>>>>>> temp-branch
+
                     $success_message = "Pasahitza aldatu da!";
                 } else {
                     $error_message = "Errorea pasahitza aldatzean";
