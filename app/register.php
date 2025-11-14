@@ -23,11 +23,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['register'])) {
             $register_error = "Pasahitzak gutxienez 8 karaktere izan behar ditu";
         } else {
             $query = sprintf(
-<<<<<<< HEAD
+
                 "INSERT INTO erabiltzaile (izena, nan, telefono, jaiotze_data, email, pasahitza) VALUES ('%s', '%s', '%s', '%s', '%s', '%s')",
-=======
+
                 "INSERT INTO usuarios (nombre, nan, telefono, fecha_nacimiento, email, password) VALUES ('%s', '%s', '%s', '%s', '%s', '%s')",
->>>>>>> temp-branch
+
                 mysqli_real_escape_string($conn, $_POST['izena']),
                 $nan,
                 mysqli_real_escape_string($conn, $_POST['telefono']),
