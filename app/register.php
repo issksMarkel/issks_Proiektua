@@ -10,11 +10,12 @@ if (isset($_SESSION['user_id'])) {
 $conn = getConnection();
 $register_error = '';
 
+// Procesar registro
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['register'])) {
     $nan = mysqli_real_escape_string($conn, $_POST['nan']);
     
     if (validarNAN($nan)) {
-        $check = mysqli_query($conn, "SELECT id FROM erabiltzaile WHERE nan = '$nan'");
+        $check = mysqli_query($conn, "SELECT id FROM usuarios WHERE nan = '$nan'");
         
         if (mysqli_num_rows($check) > 0) {
             $register_error = "NAN hau dagoeneko erregistratuta dago";
@@ -22,7 +23,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['register'])) {
             $register_error = "Pasahitzak gutxienez 8 karaktere izan behar ditu";
         } else {
             $query = sprintf(
+<<<<<<< HEAD
                 "INSERT INTO erabiltzaile (izena, nan, telefono, jaiotze_data, email, pasahitza) VALUES ('%s', '%s', '%s', '%s', '%s', '%s')",
+=======
+                "INSERT INTO usuarios (nombre, nan, telefono, fecha_nacimiento, email, password) VALUES ('%s', '%s', '%s', '%s', '%s', '%s')",
+>>>>>>> temp-branch
                 mysqli_real_escape_string($conn, $_POST['izena']),
                 $nan,
                 mysqli_real_escape_string($conn, $_POST['telefono']),

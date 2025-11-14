@@ -12,7 +12,7 @@ $login_error = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login'])) {
     $email = mysqli_real_escape_string($conn, $_POST['email']);
-    $result = mysqli_query($conn, "SELECT * FROM erabiltzaile WHERE email = '$email'");
+    $result = mysqli_query($conn, "SELECT * FROM usuarios WHERE email = '$email'");
     
     if ($user = mysqli_fetch_assoc($result)) {
         // Fix: use 'pasahitza' instead of 'password'

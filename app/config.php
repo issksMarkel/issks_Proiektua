@@ -24,7 +24,11 @@ try {
 function getConnection() {
     $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
     if ($conn->connect_error) {
+<<<<<<< HEAD
         die("Datu basearekin konexioan errorea egon da: " . $conn->connect_error);
+=======
+        die("Error de conexión a la base de datos");
+>>>>>>> temp-branch
     }
     return $conn;
 }

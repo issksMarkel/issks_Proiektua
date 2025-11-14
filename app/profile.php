@@ -7,52 +7,37 @@ if (!isset($_SESSION['user_id'])) {
     exit;
 }
 
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['delete_pokemon'])) {
-    $pokemon_name = $_POST['pokemon_name'];
-    $stmt = $conn->prepare("DELETE FROM erabiltzaile_pokemon WHERE usuario_id = ? AND elementu_izena = ?");
-    $stmt->execute([$_SESSION['user_id'], $pokemon_name]);
-    header("Location: profile.php");
-    exit();
-}
+$conn = getConnection();
+$success_message = '';
+$error_message = '';
 
 $user_id = $_SESSION['user_id'];
-$stmt = $conn->prepare("SELECT * FROM erabiltzaile WHERE id = ?");
-$stmt->execute([$user_id]);
-$user = $stmt->fetch();
-
-$stmt = $conn->prepare("
-    SELECT p.* 
-    FROM pokemon p 
-    INNER JOIN erabiltzaile_pokemon ep ON p.izena = ep.elementu_izena 
-    WHERE ep.usuario_id = ?
-");
-$stmt->execute([$_SESSION['user_id']]);
-$pokemons = $stmt->fetchAll();
+$query = "SELECT * FROM usuarios WHERE id = $user_id";
+$result = mysqli_query($conn, $query);
+$user = mysqli_fetch_assoc($result);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_profile'])) {
-    $izena = $_POST['izena'];
-    $telefono = $_POST['telefono'];
-    $jaiotze_data = $_POST['jaiotze_data'];
-    $email = $_POST['email'];
+    $nombre = mysqli_real_escape_string($conn, $_POST['nombre']);
+    $telefono = mysqli_real_escape_string($conn, $_POST['telefono']);
+    $fecha_nacimiento = mysqli_real_escape_string($conn, $_POST['fecha_nacimiento']);
+    $email = mysqli_real_escape_string($conn, $_POST['email']);
     
-    $stmt = $conn->prepare("SELECT id FROM erabiltzaile WHERE email = ? AND id != ?");
-    $stmt->execute([$email, $user_id]);
-    if ($stmt->rowCount() > 0) {
+    $check_email = mysqli_query($conn, "SELECT id FROM usuarios WHERE email = '$email' AND id != $user_id");
+    if (mysqli_num_rows($check_email) > 0) {
         $error_message = "Email hau beste erabiltzaile batek erabiltzen du";
     } else {
-        $stmt = $conn->prepare("UPDATE erabiltzaile SET 
-                              izena = ?,
-                              telefono = ?,
-                              jaiotze_data = ?,
-                              email = ?
-                              WHERE id = ?");
+        $update_query = "UPDATE usuarios SET 
+                        nombre = '$nombre',
+                        telefono = '$telefono',
+                        fecha_nacimiento = '$fecha_nacimiento',
+                        email = '$email'
+                        WHERE id = $user_id";
         
-        if ($stmt->execute([$izena, $telefono, $jaiotze_data, $email, $user_id])) {
+        if (mysqli_query($conn, $update_query)) {
             $_SESSION['email'] = $email;
             $success_message = "Datuak eguneratu dira!";
-            $stmt = $conn->prepare("SELECT * FROM erabiltzaile WHERE id = ?");
-            $stmt->execute([$user_id]);
-            $user = $stmt->fetch();
+            $result = mysqli_query($conn, $query);
+            $user = mysqli_fetch_assoc($result);
         } else {
             $error_message = "Errorea datuak eguneratzean";
         }
@@ -64,6 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['change_password'])) {
     $new_password = $_POST['new_password'];
     $confirm_password = $_POST['confirm_password'];
     
+<<<<<<< HEAD
     if (password_verify($current_password, $user['pasahitza'])) {
         if ($new_password === $confirm_password) {
             if (strlen($new_password) >= 8) {
@@ -71,12 +57,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['change_password'])) {
                 $stmt = $conn->prepare("UPDATE erabiltzaile SET pasahitza = ? WHERE id = ?");
                 
                 if ($stmt->execute([$hashed_password, $user_id])) {
+=======
+    if (password_verify($current_password, $user['password'])) {
+        if ($new_password === $confirm_password) {
+            if (strlen($new_password) >= 6) {
+                $hashed_password = password_hash($new_password, PASSWORD_DEFAULT);
+                $update_pass = "UPDATE usuarios SET password = '$hashed_password' WHERE id = $user_id";
+                
+                if (mysqli_query($conn, $update_pass)) {
+>>>>>>> temp-branch
                     $success_message = "Pasahitza aldatu da!";
                 } else {
                     $error_message = "Errorea pasahitza aldatzean";
                 }
             } else {
-                $error_message = "Pasahitzak gutxienez 8 karaktere izan behar ditu";
+                $error_message = "Pasahitzak gutxienez 6 karaktere izan behar ditu";
             }
         } else {
             $error_message = "Pasahitz berriak ez datoz bat";
@@ -85,8 +80,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['change_password'])) {
         $error_message = "Oraingo pasahitza okerra da";
     }
 }
-?>
 
+$conn->close();
+?>
 <!DOCTYPE html>
 <html lang="eu">
 <head>
@@ -105,21 +101,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['change_password'])) {
 
         <h1>Nire Profila</h1>
 
-        <?php if (isset($success_message)): ?>
-            <div class="success"><?= htmlspecialchars($success_message) ?></div>
+        <?php if ($success_message): ?>
+            <div class="success"><?= $success_message ?></div>
         <?php endif; ?>
 
-        <?php if (isset($error_message)): ?>
-            <div class="error"><?= htmlspecialchars($error_message) ?></div>
+        <?php if ($error_message): ?>
+            <div class="error"><?= $error_message ?></div>
         <?php endif; ?>
 
-        <!-- Personal data form -->
         <div class="profile-section">
             <h2>Datu Pertsonalak</h2>
             <form method="POST" onsubmit="return validarDatosPersonales()">
                 <div class="form-group">
+<<<<<<< HEAD
                     <label>Izena:</label>
                     <input type="text" name="izena" value="<?= htmlspecialchars($user['izena']) ?>" required>
+=======
+                    <label for="nombre">Izen abizenak:</label>
+                    <input type="text" id="nombre" name="nombre" value="<?= htmlspecialchars($user['nombre']) ?>" required>
+>>>>>>> temp-branch
                 </div>
 
                 <div class="form-group">
@@ -134,8 +134,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['change_password'])) {
                 </div>
 
                 <div class="form-group">
+<<<<<<< HEAD
                     <label>Jaiotze data:</label>
                     <input type="date" name="jaiotze_data" value="<?= htmlspecialchars($user['jaiotze_data']) ?>" required>
+=======
+                    <label for="fecha_nacimiento">Jaiotze data:</label>
+                    <input type="date" id="fecha_nacimiento" name="fecha_nacimiento" value="<?= htmlspecialchars($user['fecha_nacimiento']) ?>" required>
+>>>>>>> temp-branch
                 </div>
 
                 <div class="form-group">
@@ -147,7 +152,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['change_password'])) {
             </form>
         </div>
 
-        <!-- Password change form -->
         <div class="profile-section">
             <h2>Pasahitza Aldatu</h2>
             <form method="POST" onsubmit="return validarPassword()">
@@ -167,9 +171,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['change_password'])) {
             </form>
         </div>
 
-        <!-- Account information -->
         <div class="profile-section">
             <h2>Kontu Informazioa</h2>
+<<<<<<< HEAD
             <p><strong>Erregistro data:</strong> <?= date('Y-m-d H:i', strtotime($user['erregistro_data'])) ?></p>
         </div>
 
@@ -188,9 +192,42 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['change_password'])) {
                     </form>
                 </div>
             <?php endforeach; ?>
+=======
+            <p><strong>Erregistro data:</strong> <?= date('Y-m-d H:i', strtotime($user['fecha_registro'])) ?></p>
+>>>>>>> temp-branch
         </div>
     </div>
 
-    <script src="scripts.js"></script>
+    <script>
+        function validarDatosPersonales() {
+            const tel = document.getElementById('telefono').value;
+            const email = document.getElementById('email').value;
+            
+            if (!/^[0-9]{9}$/.test(tel)) {
+                alert('Telefonoak 9 zenbaki izan behar ditu');
+                return false;
+            }
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                alert('Email formatu okerra');
+                return false;
+            }
+            return true;
+        }
+
+        function validarPassword() {
+            const newPass = document.getElementById('new_password').value;
+            const confirmPass = document.getElementById('confirm_password').value;
+            
+            if (newPass.length < 6) {
+                alert('Pasahitzak gutxienez 6 karaktere izan behar ditu');
+                return false;
+            }
+            if (newPass !== confirmPass) {
+                alert('Pasahitz berriak ez datoz bat');
+                return false;
+            }
+            return true;
+        }
+    </script>
 </body>
 </html>
