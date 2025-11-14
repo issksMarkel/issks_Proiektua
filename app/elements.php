@@ -95,7 +95,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <div class="form-group">
                     <label>Aukeratu pokemona:</label>
                     <select name="pokemon_izena" required>
-                        <option value="">Aukeratu bat...</option>
+                        <option value="">Aukeratu pokemona...</option>
                         <?php foreach ($all_pokemons as $pokemon): ?>
                             <option value="<?= htmlspecialchars($pokemon['izena']) ?>">
                                 <?= htmlspecialchars($pokemon['izena']) ?> (<?= htmlspecialchars($pokemon['mota']) ?>)
@@ -118,10 +118,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <p><strong>Erasoa:</strong> <?= htmlspecialchars($pokemon['erasoa']) ?></p>
                         <p><strong>Defentsa:</strong> <?= htmlspecialchars($pokemon['defentsa']) ?></p>
                         <div class="pokemon-actions">
-                            <button class="btn btn-edit" onclick='editPokemon(<?= json_encode($pokemon) ?>)'>✏️ Editatu</button>
-                            <form method="POST" style="display: inline;" onsubmit="return confirm('Ziur zaude pokemon hau kendu nahi duzula?')">
+                            <button onclick="editPokemon(<?= htmlspecialchars(json_encode($pokemon)) ?>)" class="btn btn-edit">Editatu</button>
+                            <form method="POST" style="display: inline;">
                                 <input type="hidden" name="pokemon_izena" value="<?= htmlspecialchars($pokemon['izena']) ?>">
-                                <button type="submit" name="remove_pokemon" class="btn btn-delete">🗑️ Kendu</button>
+                                <button type="submit" name="remove_pokemon" class="btn btn-delete" onclick="return confirm('Ziur zaude pokemon hau ezabatu nahi duzula?')">Kendu</button>
                             </form>
                         </div>
                     </div>
@@ -148,15 +148,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 </div>
                 <div class="form-group">
                     <label>Bizitza:</label>
-                    <input type="number" name="bizitza" id="modal_bizitza" min="1" required>
+                    <input type="number" name="bizitza" id="modal_bizitza" min="1" max="999" required>
                 </div>
                 <div class="form-group">
                     <label>Erasoa:</label>
-                    <input type="number" name="erasoa" id="modal_erasoa" min="1" required>
+                    <input type="number" name="erasoa" id="modal_erasoa" min="1" max="999" required>
                 </div>
                 <div class="form-group">
                     <label>Defentsa:</label>
-                    <input type="number" name="defentsa" id="modal_defentsa" min="1" required>
+                    <input type="number" name="defentsa" id="modal_defentsa" min="1" max="999" required>
                 </div>
                 <button type="submit" name="update_pokemon" class="btn">Gorde</button>
                 <button type="button" class="btn btn-secondary" onclick="closeEditModal()">Utzi</button>
