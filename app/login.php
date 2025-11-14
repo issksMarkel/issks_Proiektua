@@ -15,8 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login'])) {
     $result = mysqli_query($conn, "SELECT * FROM usuarios WHERE email = '$email'");
     
     if ($user = mysqli_fetch_assoc($result)) {
-        // Fix: use 'pasahitza' instead of 'password'
-        if (password_verify($_POST['password'], $user['pasahitza'])) {
+        if (password_verify($_POST['password'], $user['password'])) {
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['email'] = $user['email'];
             header('Location: elements.php');
