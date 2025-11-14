@@ -57,6 +57,20 @@ input, select {
     margin-left: 10px;
 }
 
+.btn-delete {
+    background: #dc3545;
+    color: white;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.btn-delete:hover {
+    background: #c82333;
+}
+
 .success, .error {
     padding: 10px;
     margin: 10px 0;
@@ -182,34 +196,30 @@ input, select {
     color: #555;
 }
 
-.delete-btn {
-    background-color: #ff4444;
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    border-radius: 3px;
-    cursor: pointer;
+.element-actions {
+    display: flex;
+    gap: 10px;
     margin-top: 10px;
 }
 
-.delete-btn:hover {
-    background-color: #cc0000;
+.element-actions form {
+    flex: 1;
 }
 
-.pokemon-card {
-    border: 1px solid #ccc;
-    padding: 15px;
-    margin: 10px;
-    border-radius: 5px;
-    display: inline-block;
-    width: 200px;
+.element-actions .btn {
+    width: 100%;
+    margin: 0;
 }
 
-.pokemon-list {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 20px;
+.element-actions .btn-delete {
+    width: 100%;
+}
+
+.empty-message {
+    text-align: center;
+    color: #999;
+    padding: 20px;
+    font-style: italic;
 }
 
 .pokemon-actions {
