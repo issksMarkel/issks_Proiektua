@@ -1,6 +1,6 @@
 services:
    web:
-      image: web
+      build: .
       environment:
         - ALLOW_OVERRIDE=true
       ports:
@@ -12,24 +12,29 @@ services:
 
    db:
      image: mariadb:10.8.2
+     container_name: database
      restart: always
      volumes:
-       - ./mysql:/var/lib/mysql
+       - db_data:/var/lib/mysql
+       - ./database.sql:/docker-entrypoint-initdb.d/01-init.sql
      environment:
        MYSQL_ROOT_PASSWORD: root
        MYSQL_USER: admin
        MYSQL_PASSWORD: test
        MYSQL_DATABASE: database
      ports:
-       - "8889:3306"
+       - "3306:3306"
 
    phpmyadmin:
      image: phpmyadmin/phpmyadmin:latest
      links:
        - db
      ports:
-       - 8890:80
+       - "8890:80"
      environment:
+       PMA_HOST: db
        MYSQL_USER: admin
        MYSQL_PASSWORD: test
-       MYSQL_DATABASE: database
+
+volumes:
+  db_data:

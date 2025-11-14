@@ -57,20 +57,6 @@ input, select {
     margin-left: 10px;
 }
 
-.btn-delete {
-    background: #dc3545;
-    color: white;
-    padding: 8px 15px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-}
-
-.btn-delete:hover {
-    background: #c82333;
-}
-
 .success, .error {
     padding: 10px;
     margin: 10px 0;
@@ -78,21 +64,13 @@ input, select {
 }
 
 .success {
-    background-color: #d4edda;
-    color: #155724;
-    padding: 10px;
-    border: 1px solid #c3e6cb;
-    border-radius: 4px;
-    margin: 10px 0;
+    color: green;
+    background: #d4edda;
 }
 
 .error {
-    background-color: #f8d7da;
-    color: #721c24;
-    padding: 10px;
-    border: 1px solid #f5c6cb;
-    border-radius: 4px;
-    margin: 10px 0;
+    color: red;
+    background: #f8d7da;
 }
 
 .nav {
@@ -194,54 +172,4 @@ input, select {
 .profile-section p {
     margin: 10px 0;
     color: #555;
-}
-
-.element-actions {
-    display: flex;
-    gap: 10px;
-    margin-top: 10px;
-}
-
-.element-actions form {
-    flex: 1;
-}
-
-.element-actions .btn {
-    width: 100%;
-    margin: 0;
-}
-
-.element-actions .btn-delete {
-    width: 100%;
-}
-
-.empty-message {
-    text-align: center;
-    color: #999;
-    padding: 20px;
-    font-style: italic;
-}
-
-.pokemon-actions {
-    margin-top: 10px;
-    display: flex;
-    gap: 10px;
-}
-
-.btn-delete {
-    background-color: #dc3545;
-    color: white;
-}
-
-.btn-delete:hover {
-    background-color: #c82333;
-}
-
-.btn-edit {
-    background-color: #007bff;
-    color: white;
-}
-
-.btn-edit:hover {
-    background-color: #0056b3;
 }

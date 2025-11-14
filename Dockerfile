@@ -1,5 +1,14 @@
-FROM php:8.1-apache
-WORKDIR /var/www/html
-RUN docker-php-ext-install mysqli pdo pdo_mysql
+FROM php:8.2-apache
+
+# Instalar extensiones necesarias
+RUN docker-php-ext-install pdo pdo_mysql mysqli
 RUN a2enmod rewrite
-RUN echo "<Directory /var/www/html>\nAllowOverride All\n</Directory>" >> /etc/apache2/apache2.conf
+
+# Copiar la aplicación
+COPY app/ /var/www/html/
+
+# Configurar permisos
+RUN chown -R www-data:www-data /var/www/html
+RUN chmod -R 755 /var/www/html
+
+WORKDIR /var/www/html

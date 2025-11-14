@@ -11,14 +11,18 @@ $conn = getConnection();
 $login_error = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login'])) {
+    // Validar CSRF token
+    validarTokenCSRF($_POST['csrf_token']);
+    
     $email = mysqli_real_escape_string($conn, $_POST['email']);
     $result = mysqli_query($conn, "SELECT * FROM usuarios WHERE email = '$email'");
     
     if ($user = mysqli_fetch_assoc($result)) {
-        // Fix: use 'pasahitza' instead of 'password'
-        if (password_verify($_POST['password'], $user['pasahitza'])) {
+        if (password_verify($_POST['password'], $user['password'])) {
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['email'] = $user['email'];
+            // Regenerar token después del login
+            unset($_SESSION['csrf_token']);
             header('Location: elements.php');
             exit;
         }
@@ -45,6 +49,7 @@ $conn->close();
         <?php endif; ?>
         
         <form method="POST">
+            <input type="hidden" name="csrf_token" value="<?= generarTokenCSRF() ?>">
             <div class="form-group">
                 <label>Email:</label>
                 <input type="email" name="email" required>
