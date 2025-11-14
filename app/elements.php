@@ -11,7 +11,7 @@ $conn = getConnection();
 $success_message = '';
 $error_message = '';
 
-<<<<<<< HEAD
+
 $stmt = $conn->prepare("
     SELECT p.* 
     FROM pokemon p
@@ -61,7 +61,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $_SESSION['success'] = "Pokemona eguneratu da!";
         header("Location: elements.php");
         exit();
-=======
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_element'])) {
     $elementu = mysqli_real_escape_string($conn, $_POST['elementu_izena']);
     $check = mysqli_query($conn, "SELECT * FROM usuario_elementuak WHERE usuario_id = {$_SESSION['user_id']} AND elementu_izena = '$elementu'");
@@ -71,7 +71,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_element'])) {
     } else {
         mysqli_query($conn, "INSERT INTO usuario_elementuak (usuario_id, elementu_izena) VALUES ({$_SESSION['user_id']}, '$elementu')");
         $success_message = "Elementua gehitu da!";
->>>>>>> temp-branch
+
     }
 }
 
